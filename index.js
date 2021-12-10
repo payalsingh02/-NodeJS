@@ -1,26 +1,24 @@
-// var rect = {
-//     perimeter : (x , y) => ( 2*(x+y)),
-//     area : (x , y) => ( x * y)
-// };
-var rect = require('./rectangle');
+const express = require('express');
+const http = require('http');
+const morgan = require('morgan');
 
+const hostname = "localhost";
+const port = 3000;
 
-function solveRect (l,b) {
-    console.log(" solving for rectangle with l = " + l +" and b =" + b);
+const app = express();
+app.use(morgan('dev'))
 
-    rect(l,b,(err , rectangle) =>{
-        if (err){
-            console.log("ERROR:" , err.message);
-        }
-        else{
-            console.log("the area of rectangle of dimensions l = " + l + " and b= " + b + " is " + rectangle.area());
-            console.log("the perimeter of rectangle of dimensions l = " + l + " and b= " + b + " is " + rectangle.perimeter());
-        }
-    });
-    
-    console.log("This statement is after the call to rect()");
-}
+app.use(express.static(__dirname+ '/public'))
 
-solveRect(2,4);
-solveRect(0,5);
-solveRect(2,-5);
+app.use((req , res , next) => {
+    // console.log(req.headers);
+    res.statusCode = 200;
+    res.setHeader('Content-Type' , 'text/html');
+    res.end('<html><body><h1>This is an express server</h1></body></html>');
+});
+
+const server = http.createServer(app);
+
+server.listen(port , hostname , () => {
+    console.log(`Server runnning at http://${hostname}:${port}`);
+})
